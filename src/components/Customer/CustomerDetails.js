@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import  {getAllCustomerDetails} from "../ApiManager"
 
 export const CustomerDetails = () => {
 const {customerId} = useParams()
@@ -8,11 +9,10 @@ const [customer, updateCustomer] =useState()
 
 useEffect( 
     () => {
-        fetch(`http://localhost:8088/customers/${customerId}?_expand=user`)
-    .then(res => res.json())
+        getAllCustomerDetails(customerId)
     .then(updateCustomer)
 }, [customerId])
-        
+// when clicking on customer from the customer list it will return the following code located in the return
 
 
 return <>

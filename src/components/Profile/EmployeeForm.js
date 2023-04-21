@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { getEmployeeForm, saveEmployee } from "../ApiManager"
 
 export const EmployeeForm = () => {
     // TODO: Provide initial state for profile
@@ -7,7 +8,7 @@ export const EmployeeForm = () => {
     const [ profile, updateProfile] = useState({
     specialty: "",
     rate: 0,
-    userId: honeyUserObject.id
+    userId: 0
 })
     
     const [feedback, setFeedback] = useState("")
@@ -21,9 +22,8 @@ useEffect(() => {
 
     // TODO: Get employee profile info from API and update state
 useEffect(() => {
-    fetch(`http://localhost:8088/employees?userId=${honeyUserObject.id}`) 
-    .then(response => response.json())
-    .then(data => {
+    getEmployeeForm(honeyUserObject)
+    .then((data) => {
     const employeeObject = data[0]
     updateProfile(employeeObject)
     })
@@ -39,13 +39,7 @@ useEffect(() => {
             TODO: Perform the PUT fetch() call here to update the profile.
             Navigate user to home page when done.
         */
-          return  fetch(`http://localhost:8088/employees/${profile.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(profile)
-            })
+          saveEmployee(profile)
             .then(() => {
                 updateProfile({
                     ...profile, // this is preserving the userId of the person logged in so no weird issues with trying to update the profile again
@@ -72,7 +66,7 @@ useEffect(() => {
                         required autoFocus
                         type="text"
                         className="form-control"
-                        value={profile.specialty}
+                        value={profile?.specialty}
                         onChange={
                             (evt) => {
                                 const copy = {...profile}
@@ -87,7 +81,7 @@ useEffect(() => {
                     <label htmlFor="name">Hourly rate:</label>
                     <input type="number"
                         className="form-control"
-                        value={profile.rate}
+                        value={profile?.rate}
                         onChange={
                             (evt) => {
                                 const copy = {...profile}
